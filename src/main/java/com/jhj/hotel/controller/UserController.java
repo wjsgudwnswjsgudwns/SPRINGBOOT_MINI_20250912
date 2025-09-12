@@ -57,4 +57,10 @@ public class UserController {
 		
 		return "/";
 	}
+	
+	@GetMapping(value = "/login")
+	public String login(UserCreateForm userCreateForm) {
+		
+		return "login";
+	}
 }
