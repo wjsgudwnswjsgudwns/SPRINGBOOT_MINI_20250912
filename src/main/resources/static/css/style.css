@@ -1,0 +1,15 @@
+@charset "UTF-8";
+
+textarea {
+	width: 100%;
+	
+}
+
+input[type=submit] {
+	margin-top: 10px; /* submit 버트 상단여백 */
+	
+}
+
+ul {
+	list-style: none;
+}
