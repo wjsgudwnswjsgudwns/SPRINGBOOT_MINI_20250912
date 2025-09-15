@@ -3,7 +3,7 @@
 	<div layout:fragment="content" class="container my-3">
 	
 		<h2>게시글 작성</h2>
-	    <form th:action="@{/freeboard/write}" th:object="${boardForm}" method="post">
+	    <form th:action="@{/freeboard/create}" th:object="${boardForm}" method="post">
 	        <div class="mb-3">
 	            <label for="subject" class="form-label">제목</label>
 	            <input type="text" th:field="*{subject}" class="form-control" id="title" placeholder="제목을 입력하세요">

@@ -2,19 +2,94 @@
 
 	<div layout:fragment="content" class="container my-3">
 	
-	<h2 th:text="${board.title}">게시글 제목</h2>
-    <div class="mb-2 text-muted">
-        작성자: <span th:text="${board.author}">작성자 이름</span> |
-        작성일: <span th:text="${#dates.format(board.createdDate, 'yyyy-MM-dd HH:mm')}">2025-09-15 10:00</span>
-    </div>
-    <hr>
-    <div class="mb-3" th:text="${board.content}">게시글 내용</div>
-    <a th:href="@{/board/list}" class="btn btn-secondary">목록</a>
-    <a th:href="@{/board/edit/{id}(id=${board.id})}" class="btn btn-primary">수정</a>
-    <a th:href="@{/board/delete/{id}(id=${board.id})}" class="btn btn-danger"
-       onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
-	
-	
+	<h2 th:text="${freeboard.subject}">게시글 제목</h2>
+	<div class="card my-3">
+		<div class="card-body">
+		    <div class="mb-2 text-muted">
+		        작성자: <span th:text="${freeboard.author.username}">작성자 이름</span> |
+		        작성일: <span th:text="${#temporals.format(freeboard.createdate, 'yyyy-MM-dd HH:mm')}">2025-09-15 10:00</span> |
+		        조회수: <span th:text="${freeboard.hit}">조회수</span>
+		    </div>
+		    <hr>
+		    <div class="mb-3" th:text="${freeboard.content}">게시글 내용</div>
+		    <a th:href="@{/freeboard/boardlist}" class="btn btn-secondary">목록</a>
+		    
+		
+			<!-- 수정 버튼 -->
+			<a th:href="@{|/freeboard/modify/${freeboard.id}|}" class="btn btn-sm btn-outline-secondary" 
+			sec:authorize="isAuthenticated()" 
+			th:if="${freeboard.author != null and #authentication.getPrincipal().getUsername() == freeboard.author.username}"
+			th:text="수정">수정</a>
+			
+			
+			<!-- 삭제버튼 -->
+			<a href="javascript:void(0);" 
+			th:data-uri="@{|/freeboard/delete/${freeboard.id}|}" class="delete btn btn-sm btn-outline-secondary" 
+			sec:authorize="isAuthenticated()" 
+			th:if="${freeboard.author != null and #authentication.getPrincipal().getUsername() == freeboard.author.username}"
+			th:text="삭제">삭제</a>
+		</div>
 	</div>
 	
+	<!-- 답변 등록 -->
+	<form th:action="@{|/comment/create/${freeboard.id}|}" th:object="${commentForm}" method="post" class="my-3">
+		<!-- 유효성 체크 에러 표시 -->
+		<div th:replace="~{form_errors :: formErrorsFragment}"></div>
+	
+		<textarea sec:authorize="isAnonymous()" disabled rows="10" cols="40" th:field="*{content}" class="form-control"></textarea>
+		<textarea sec:authorize="isAuthenticated()" rows="10" cols="40" th:field="*{content}" class="form-control"></textarea>
+		
+		<input sec:authorize="isAnonymous()" disabled type="submit" value="답변 등록" class="btn btn-primary my-2">
+		<input sec:authorize="isAuthenticated()" type="submit" value="답변 등록" class="btn btn-primary my-2">
+	</form>
+	
+	<!-- 답변 반복 -->
+	<div class="card my-3" th:each="comment : ${freeboard.commentlist}">
+		<a th:id="|comment_${comment.id}|"></a>
+		<div class="card-body">
+			<div class="card-text" style="white-space: pre-line;" th:text="${comment.content}">답변글 내용</div>
+			<div class="d-flex justify-content-end">
+				
+				<div class="badge bg-light text-dark p-2 text-start">
+					<div class="mb-2">
+						<span th:if="${comment.author != null}" th:text="${comment.author.username}"></span>
+					</div>
+					<div class="badge bg-light text-dark p-2 text-start">
+						<div th:text="${#temporals.format(comment.createdate, 'yyyy-MM-dd HH:mm')}">답변 등록일</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="my-3">
+				<!-- 답변 수정 버튼 -->
+				<a th:href="@{|/comment/modify/${comment.id}|}" class="btn btn-sm btn-outline-secondary" 
+				sec:authorize="isAuthenticated()" 
+				th:if="${comment.author != null and #authentication.getPrincipal().getUsername() == comment.author.username}"
+				th:text="수정">수정</a>
+				<!-- 답변 삭제 버튼 -->
+				<a href="javascript:void(0);" 
+				th:data-uri="@{|/comment/delete/${comment.id}|}" class="delete btn btn-sm btn-outline-secondary" 
+				sec:authorize="isAuthenticated()" 
+				th:if="${comment.author != null and #authentication.getPrincipal().getUsername() == comment.author.username}"
+				th:text="삭제">삭제</a>
+			</div>
+			
+		</div>
+	</div>
+	
+	<!-- 자바스크립트 작성 -->
+	<script type="text/javascript" layout:fragment="script">
+	
+	const delete_elements = document.getElementsByClassName("delete");
+		Array.from(delete_elements).forEach(function (element) {
+			element.addEventListener('click', function () {
+				if (confirm("정말로 삭제하시겠습니까?")) {
+				location.href = this.dataset.uri;
+			};
+		});
+	});
+		
+		
+		
+	</script>
 </html>

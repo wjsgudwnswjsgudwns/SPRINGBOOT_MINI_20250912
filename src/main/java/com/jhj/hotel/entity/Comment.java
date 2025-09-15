@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -21,33 +22,33 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "hoteluser")
+@Table(name = "commenttbl") // 실제로 매핑될 데이터베이스의 테이블 이름 설정
 @SequenceGenerator(
-		name = "USER_SEQ_GENERATOR", // JPA 내부 시퀀스 이름
-		sequenceName =  "USERJOIN_SEQ", // 실제 DB 시퀸스 이름
+		name = "COMMENT_SEQ_GENERATOR", // JPA 내부 시퀀스 이름
+		sequenceName =  "COMMENT_SEQ", // 실제 DB 시퀸스 이름
 		initialValue = 1, // 시퀀스 초기값
 		allocationSize = 1 // 시퀀스 증가치
 		)
-public class HotelUser {
+public class Comment {
+
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_SEQ_GENERATOR")
-	private Long id; // 유저 번호, 기본키
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "COMMENT_SEQ_GENERATOR")
+	private Integer id; // 기본키, 자동 증가
 	
-	@Column(unique = true)
-	private String username; // 아이디
-	
-	private String password; // 비밀번호
-	
-	private String userrealname;
-	
-	@Column(unique = true)
-	private String email; // 이메일
-	
-	@Column(unique = true)
-	private String phone; // 핸드폰
+	@Column(length = 2000)
+	private String content; // 답변 게시판 내용
 	
 	@CreationTimestamp
-	private LocalDateTime createdate; // 계정 생성일
+	private LocalDateTime createdate;
+	
+	@ManyToOne
+	private Freeboard freeboard;
+	
+	@ManyToOne
+	private HotelUser author;
+	
+	@ManyToOne
+	private Noticeboard noticeboard;
 	
 }

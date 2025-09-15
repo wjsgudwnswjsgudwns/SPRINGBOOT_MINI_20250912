@@ -1,0 +1,49 @@
+<html layout:decorate="~{index}">
+
+	<div layout:fragment="content" class="container my-3">
+
+	<link rel="stylesheet" type="text/css" th:href="@{/css/noticelist.css}">
+
+	<div class="search-box">
+		<input type="text" placeholder="Search">
+		<button>검색</button>
+	</div>
+
+	<table>
+		<thead>
+			<tr>
+				<th>No</th>
+				<th>제목</th>
+				<th>글쓴이</th>
+				<th>조회수</th>
+				<th>작성시간</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<!-- 글 번호 -->
+				<td th:text="${paging.getTotalElements - (loop.count-1) - (paging.number * paging.size)}"></td>
+				<!-- 글 제목 -->
+				<td class="text-start">
+					<a th:href="@{|/notice/noticelist/${notice.id}|}" th:text="${notice.subject}">제목</a>
+				</td>
+				<!-- 글쓴이 -->
+				<td>
+					<span th:if="${notice.author != null}" th:text="${notice.author.username}">작성자</span>
+				</td>
+				<!-- 조회수 -->
+				<td>
+					<span th:text="${notice.hit}">조회수</span>
+				</td>
+				<!-- 작성일 -->
+				<td>
+					<span th:text="${#temporals.format(notice.createdate, 'yyyy-MM-dd HH:mm')}">작성일</span>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+
+	</div>
+	
+</html>

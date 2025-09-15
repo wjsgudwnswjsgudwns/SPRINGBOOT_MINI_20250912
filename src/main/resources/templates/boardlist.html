@@ -10,51 +10,97 @@
         <a th:href="@{/freeboard/create}" class="btn btn-primary">글 작성</a>
     </div>
 
+	<!-- 검색 -->
+	<div class="col-6">
+	  <form action="" class="d-flex">
+	    <select class="form-select me-2" style="width: 120px;">
+	      <option value="subject">제목</option>
+	      <option value="author">작성자</option>
+	    </select>
+	    
+	    <input type="text" name="kw" id="search_kw" class="form-control me-2" th:value="${kw}" placeholder="검색어를 입력하세요">
+	    
+	    <button type="submit" id="btn_search" class="btn btn-primary">검색</button>
+	  </form>
+	</div>
+
+
     <!-- 게시판 테이블 -->
     <table class="table table-striped">
-        <thead>
-            <tr>
+        <thead class="table-red">
+			<tr class="text-center">
                 <th scope="col">번호</th>
                 <th scope="col">제목</th>
                 <th scope="col">작성자</th>
-                <th scope="col">작성일</th>
                 <th scope="col">조회수</th>
+                <th scope="col">작성일</th>
             </tr>
         </thead>
         <tbody>
-           <!--  <tr th:each="board : ${boardList}">
-                <td th:text="${board.id}">1</td>
-                <td>
-                    <a th:href="@{'/board/view/' + ${board.id}}" th:text="${board.title}">게시글 제목</a>
-                </td>
-                <td th:text="${board.writer}">작성자</td>
-                <td th:text="${#dates.format(board.createdDate, 'yyyy-MM-dd')}">2025-09-15</td>
-                <td th:text="${board.viewCount}">0</td>
-            </tr> -->
-        </tbody>
+			<tr class="text-center" th:each="board, loop : ${paging}">
+				<!-- 질문 글 번호 -->
+				<td th:text="${paging.getTotalElements - (loop.count-1) - (paging.number * paging.size)}"></td>
+				<!-- 제목 왼쪽 정렬 -->
+				<td class="text-start">
+					<a th:href="@{|/freeboard/boardview/${board.id}|}" th:text="${board.subject}">제목</a>
+				</td>
+				<td>
+					<span th:if="${board.author != null}" th:text="${board.author.username}">작성자</span>
+				</td>
+				<td><span th:text="${board.hit}">조회수</span></td>
+				<td th:text="${#temporals.format(board.createdate, 'yyyy-MM-dd HH:mm')}">등록일</td>
+			</tr>
+		</tbody>
     </table>
 
-    <!-- 
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${boardPage.hasPrevious()} ? '' : 'disabled'">
-                <a class="page-link" th:href="@{|/board/list?page=${boardPage.number - 1}|}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item" th:each="i : ${#numbers.sequence(0, boardPage.totalPages - 1)}"
-                th:classappend="${i} == ${boardPage.number} ? 'active'">
-                <a class="page-link" th:href="@{|/board/list?page=${i}|}" th:text="${i + 1}">1</a>
-            </li>
-            <li class="page-item" th:classappend="${boardPage.hasNext()} ? '' : 'disabled'">
-                <a class="page-link" th:href="@{|/board/list?page=${boardPage.number + 1}|}" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
-    </nav> -->
-	
-		
+    <!-- 페이징 처리 -->
+	<div th:if="${!paging.isEmpty()}">
+		<ul class="pagination justify-content-center">
+			<li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+				<a class="page-link" href="javascript:void(0)" th:data-page="${paging.number-1}">
+					<span>이전</span>
+				</a>
+			</li>
+			
+			<li th:each="page: ${#numbers.sequence(0,paging.totalPages-1)}" 
+			th:if="${page >= paging.number-5 and page <= paging.number+5}"
+			th:classappend="${page==paging.number} ? 'active'" class="page-item">
+				<a th:text="${page+1}" class="page-link" href="javascript:void(0)" th:data-page="${page}"></a>
+			</li>
+			
+			<li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+				<a class="page-link" href="javascript:void(0)" th:data-page="${paging.number+1}">
+					<span>다음</span>
+				</a>
+			</li>
+		</ul>
 	</div>
+	<!-- 페이징 끝 -->
+	
+	<!-- hidden input 추가 -->
+	<form th:action="@{/freeboard/boardlist}" method="get" id="searchForm">
+	    <input type="hidden" id="page" name="page" th:value="${paging.number}">
+	    <input type="hidden" id="kw" name="kw" th:value="${kw}">
+	</form>
+	
+	<script type="text/javascript" layout:fragment="script">
+	// 페이지 번호 전솔시 -> kw(검색어)도 같이 전송하기 위한 자바 스크립트
+	const page_elements = document.getElementsByClassName("page-link");
+		Array.from(page_elements).forEach(function (element) {
+			element.addEventListener('click', function () {
+				document.getElementById('page').value=this.dataset.page;
+				document.getElementById('searchForm').submit();
+		});
+	});
+		
+	// 검색어와 페이지 번호를 같이 전송하기 위한 자바 스크립트
+	const btn_search = document.getElementById("btn_search");
+		btn_search.addEventListener('click', function () {
+			document.getElementById('kw').value = document.getElementById('search_kw').value;
+			document.getElementById('page').value = 0
+			// 검색버튼 클릭 -> kw=검색란에 입력한 단어 & page = 0 -> 검색 결과 중 1페이지가 리스트로 조회
+			document.getElementById('searchForm').submit();
+		});
+	</script>
 	
 </html>

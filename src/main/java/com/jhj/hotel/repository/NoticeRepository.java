@@ -5,11 +5,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.jhj.hotel.entity.Freeboard;
+import com.jhj.hotel.entity.Noticeboard;
 
-public interface BoardlistRepository extends JpaRepository<Freeboard,Integer>{
-
-	public Page<Freeboard> findAll(Pageable pageable);
+public interface NoticeRepository extends JpaRepository<Noticeboard, Integer> {
 	
-	public Page<Freeboard> findAll(Specification<Freeboard> spec,Pageable pageable);
+	public Page<Noticeboard> findAll(Specification<Noticeboard> spec, Pageable pageable);
 }
