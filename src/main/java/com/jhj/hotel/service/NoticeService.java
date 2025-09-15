@@ -37,7 +37,7 @@ public class NoticeService {
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(sorts));
 		Specification<Noticeboard> spec = search(kw);
 		
-		return noticeRepository.findAll(spec, pageable); 
+		return noticeRepository.findAll(spec, pageable);
 	}
 	
 	private Specification<Noticeboard> search(String kw) { // 키워드 (kw) 로 조회

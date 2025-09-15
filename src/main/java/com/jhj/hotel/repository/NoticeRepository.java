@@ -9,5 +9,7 @@ import com.jhj.hotel.entity.Noticeboard;
 
 public interface NoticeRepository extends JpaRepository<Noticeboard, Integer> {
 	
+	public Page<Noticeboard> findAll(Pageable pageable);
+	
 	public Page<Noticeboard> findAll(Specification<Noticeboard> spec, Pageable pageable);
 }
