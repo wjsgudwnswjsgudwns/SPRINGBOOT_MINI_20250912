@@ -1,0 +1,21 @@
+<html layout:decorate="~{index}">
+
+	<div layout:fragment="content" class="container my-3">
+	
+		<h2>게시글 작성</h2>
+	    <form th:action="@{/freeboard/write}" th:object="${boardForm}" method="post">
+	        <div class="mb-3">
+	            <label for="subject" class="form-label">제목</label>
+	            <input type="text" th:field="*{subject}" class="form-control" id="title" placeholder="제목을 입력하세요">
+	        </div>
+	        <div class="mb-3">
+	            <label for="content" class="form-label">내용</label>
+	            <textarea th:field="*{content}" class="form-control" id="content" rows="5" placeholder="내용을 입력하세요"></textarea>
+	        </div>
+	        <button type="submit" class="btn btn-primary">작성</button>
+	        <a th:href="@{/freeboard/boardlist}" class="btn btn-secondary">취소</a>
+	    </form>
+	
+	</div>
+	
+</html>

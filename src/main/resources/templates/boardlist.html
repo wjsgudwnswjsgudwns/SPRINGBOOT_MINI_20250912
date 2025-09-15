@@ -1,0 +1,60 @@
+<html layout:decorate="~{index}">
+
+	<div layout:fragment="content" class="container my-3">
+	
+		
+	 <h2 class="mb-4">게시판 목록</h2>
+
+    <!-- 글 작성 버튼 -->
+    <div class="mb-3 text-end">
+        <a th:href="@{/freeboard/create}" class="btn btn-primary">글 작성</a>
+    </div>
+
+    <!-- 게시판 테이블 -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">번호</th>
+                <th scope="col">제목</th>
+                <th scope="col">작성자</th>
+                <th scope="col">작성일</th>
+                <th scope="col">조회수</th>
+            </tr>
+        </thead>
+        <tbody>
+           <!--  <tr th:each="board : ${boardList}">
+                <td th:text="${board.id}">1</td>
+                <td>
+                    <a th:href="@{'/board/view/' + ${board.id}}" th:text="${board.title}">게시글 제목</a>
+                </td>
+                <td th:text="${board.writer}">작성자</td>
+                <td th:text="${#dates.format(board.createdDate, 'yyyy-MM-dd')}">2025-09-15</td>
+                <td th:text="${board.viewCount}">0</td>
+            </tr> -->
+        </tbody>
+    </table>
+
+    <!-- 
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${boardPage.hasPrevious()} ? '' : 'disabled'">
+                <a class="page-link" th:href="@{|/board/list?page=${boardPage.number - 1}|}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="i : ${#numbers.sequence(0, boardPage.totalPages - 1)}"
+                th:classappend="${i} == ${boardPage.number} ? 'active'">
+                <a class="page-link" th:href="@{|/board/list?page=${i}|}" th:text="${i + 1}">1</a>
+            </li>
+            <li class="page-item" th:classappend="${boardPage.hasNext()} ? '' : 'disabled'">
+                <a class="page-link" th:href="@{|/board/list?page=${boardPage.number + 1}|}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav> -->
+	
+		
+	</div>
+	
+</html>

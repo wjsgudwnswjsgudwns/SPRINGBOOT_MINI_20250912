@@ -1,5 +1,9 @@
 package com.jhj.hotel.entity;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,7 +35,7 @@ public class HotelUser {
 	private Long id; // 유저 번호, 기본키
 	
 	@Column(unique = true)
-	private String userid; // 아이디
+	private String username; // 아이디
 	
 	private String password; // 비밀번호
 	
@@ -40,5 +44,8 @@ public class HotelUser {
 	
 	@Column(unique = true)
 	private String phone; // 핸드폰
+	
+	@CreationTimestamp
+	private LocalDateTime createdate; // 계정 생성일
 	
 }

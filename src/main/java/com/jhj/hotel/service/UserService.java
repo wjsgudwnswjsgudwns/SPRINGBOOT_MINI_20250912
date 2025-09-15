@@ -1,9 +1,12 @@
 package com.jhj.hotel.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.jhj.hotel.DataNotFoundException;
 import com.jhj.hotel.entity.HotelUser;
 import com.jhj.hotel.repository.UserRepository;
 
@@ -17,10 +20,10 @@ public class UserService {
 	private PasswordEncoder passwordEncoder;
 	
 	// 회원 가입
-	public HotelUser create(String userid, String password, String email, String phone) {
+	public HotelUser create(String username, String password, String email, String phone) {
 		HotelUser user = new HotelUser();
 		
-		user.setUserid(userid);
+		user.setUsername(username);
 		user.setEmail(email);
 		user.setPhone(phone);
 		
@@ -31,4 +34,15 @@ public class UserService {
 		
 		return user;
 	}
+	
+	public HotelUser getUser(String username) {
+		Optional<HotelUser> getuser = userRepository.findByUsername(username);
+		if(getuser.isPresent()) {
+			HotelUser user = getuser.get();
+			return user;
+		} else {
+			throw new DataNotFoundException("존재하지 않는 유저입니다");
+		}
+	}
+	
 }

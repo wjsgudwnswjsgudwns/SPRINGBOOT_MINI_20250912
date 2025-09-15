@@ -28,7 +28,7 @@ public class UserController {
 	}
 	
 	@PostMapping(value = "signup")
-	public String signup(BindingResult bindingResult,@Valid UserCreateForm userCreateForm) {
+	public String signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
 		
 		if(bindingResult.hasErrors()) {
 			return "signup";
@@ -46,21 +46,22 @@ public class UserController {
 				
 				// 이미 들옥된 사용자의 아이디일 경우 발생하는 에러
 				bindingResult.reject("signupFailed", "사용중인 아이디입니다.");
-				return "signup_form";
+				return "signup";
 				
 			} catch(Exception e) { // 기타 나머지 예외 처리
 				e.printStackTrace();
 				bindingResult.reject("signupFailed", "회원 가입 실패.");
-				return "signup_form";
+				return "signup";
 			}
 		
 		
-		return "/";
+		return "redirect:/user/login";
 	}
 	
 	@GetMapping(value = "/login")
-	public String login(UserCreateForm userCreateForm) {
+	public String login() { // 로그인 화면 보이기
 		
 		return "login";
 	}
+	
 }
