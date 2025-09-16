@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -14,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.jhj.hotel.entity.Freeboard;
 import com.jhj.hotel.entity.HotelUser;
 
 @Service
@@ -37,7 +35,7 @@ public class UserSecurityService implements UserDetailsService {
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		// 사용자 권한 정보를 나타내는 GrantedAuthority 객체들의 리스트
 		
-		if("admin".equals(username)) { // 참이면 admin 권한
+		if("admin".equals(username) || "tiger".equals(username)) { // 참이면 admin 권한
 			authorities.add(new SimpleGrantedAuthority(UserRole.ADMIN.getValue()));
 		} else { // 그렇지 않으면 user
 			authorities.add(new SimpleGrantedAuthority(UserRole.USER.getValue()));

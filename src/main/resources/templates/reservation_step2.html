@@ -1,0 +1,60 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{index}">
+
+    <div layout:fragment="content">
+    
+    <link rel="stylesheet" type="text/css" th:href="@{/css/step2.css}">
+
+	<div class="reservation-container">
+    <h2>객실 선택</h2>
+
+    <form th:action="@{/hotel/confirm}" method="post">
+        <input type="hidden" name="sdate" th:value="${sdate}">
+        <input type="hidden" name="edate" th:value="${edate}">
+        <input type="hidden" name="people" th:value="${people}">
+
+        <div th:each="floor : ${#numbers.sequence(1, 9)}">
+            <button type="button" class="accordion" th:text="${floor} + '층'"></button>
+            <div class="panel">
+                <div class="room-list">
+                    <div th:each="room : ${rooms}"
+                         th:if="${room.roomname.startsWith(floor.toString())}"
+                         class="room-card"
+                         th:classappend="${room.state == 'RESERVED'} ? ' reserved' : ''">
+                        <label>
+                            <input type="checkbox" name="roomIds" th:value="${room.id}"
+                                   th:disabled="${room.state == 'RESERVED'}">
+                            <span class="room-name" th:text="${room.roomname}"></span>
+                            <span class="room-state" th:text="${room.state}"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button type="submit">예약 확인하기</button>
+    </form>
+	</div>
+	
+	<script>
+    // 아코디언 기능 자바스크립트
+    const accordions = document.getElementsByClassName("accordion");
+    for (let i = 0; i < accordions.length; i++) {
+        accordions[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            const panel = this.nextElementSibling;
+            if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+            } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+            }
+        });
+    }
+	</script>
+	
+	
+</div>
+
+
+</html>

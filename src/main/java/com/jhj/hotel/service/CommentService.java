@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.jhj.hotel.entity.Comment;
 import com.jhj.hotel.entity.Freeboard;
 import com.jhj.hotel.entity.HotelUser;
+import com.jhj.hotel.entity.Noticeboard;
 import com.jhj.hotel.repository.CommentRepository;
 
 @Service
@@ -20,6 +21,17 @@ public class CommentService {
 		Comment comment = new Comment();
 		comment.setContent(content);
 		comment.setFreeboard(freeboard);
+		comment.setAuthor(author);
+		
+		commentRepository.save(comment);
+		
+		return comment;
+	}
+	
+	public Comment createN(Noticeboard noticeboard, String content, HotelUser author) {
+		Comment comment = new Comment();
+		comment.setContent(content);
+		comment.setNoticeboard(noticeboard);
 		comment.setAuthor(author);
 		
 		commentRepository.save(comment);

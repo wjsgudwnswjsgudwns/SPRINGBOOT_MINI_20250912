@@ -1,0 +1,30 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{index}">
+  <div layout:fragment="content">
+    <link rel="stylesheet" th:href="@{/css/reservation.css}">
+
+    <div class="reservation-container">
+      <h2>예약 확인</h2>
+
+      <form th:action="@{/hotel/complete}" method="post">
+        <input type="hidden" name="sdate" th:value="${sdate}">
+        <input type="hidden" name="edate" th:value="${edate}">
+        <input type="hidden" name="people" th:value="${people}">
+        <input type="hidden" th:each="room : ${selectedRooms}" name="roomIds" th:value="${room.id}" />
+
+        <h3>예약 정보</h3>
+        <p>체크인: <span th:text="${reservation.sdate}"></span></p>
+        <p>체크아웃: <span th:text="${reservation.edate}"></span></p>
+        <p>인원 수: <span th:text="${reservation.people}"></span></p>
+
+        <h3>선택한 객실</h3>
+        <ul>
+          <li th:each="room : ${selectedRooms}" th:text="${room.roomname}"></li>
+        </ul>
+
+        <button type="submit">예약 확정</button>
+      </form>
+    </div>
+  </div>
+</html>

@@ -17,9 +17,11 @@ import org.springframework.web.server.ResponseStatusException;
 import com.jhj.hotel.entity.Comment;
 import com.jhj.hotel.entity.Freeboard;
 import com.jhj.hotel.entity.HotelUser;
+import com.jhj.hotel.entity.Noticeboard;
 import com.jhj.hotel.form.CommentForm;
 import com.jhj.hotel.service.BoardlistService;
 import com.jhj.hotel.service.CommentService;
+import com.jhj.hotel.service.NoticeService;
 import com.jhj.hotel.service.UserService;
 
 import jakarta.validation.Valid;
@@ -36,6 +38,9 @@ public class CommentController {
 	
 	@Autowired
 	private BoardlistService boardlistService;
+	
+	@Autowired
+	private NoticeService noticeService;
 	
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping(value = "/create/{id}")
@@ -98,5 +103,7 @@ public class CommentController {
 		return String.format("redirect:/freeboard/boardview/%s", comment.getFreeboard().getId());
 		
 	}
+	
+	
 	 
 }

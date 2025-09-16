@@ -21,8 +21,8 @@ public class SecurityConfig {
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception { // 모든 페이지의 요청을 허락한다.
 		http
 			.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-					.requestMatchers(new AntPathRequestMatcher("/user/login")).permitAll()
-                    .requestMatchers(new AntPathRequestMatcher("/user/signup")).permitAll()
+//					.requestMatchers(new AntPathRequestMatcher("/user/login")).permitAll()
+//                    .requestMatchers(new AntPathRequestMatcher("/user/signup")).permitAll()
 					.requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
 			.formLogin((formLogin) -> formLogin // 스프링 시큐리티에서 로그인 설정
 					.loginPage("/user/login") // 로그인 요청

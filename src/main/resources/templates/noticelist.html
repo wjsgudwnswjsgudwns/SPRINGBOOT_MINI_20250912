@@ -4,11 +4,16 @@
 
 	<link rel="stylesheet" type="text/css" th:href="@{/css/noticelist.css}">
 
+	<!-- 글 작성 버튼 -->
+    <div class="mb-3 text-end">
+        <a th:href="@{/notice/create}" sec:authorize="hasRole('ADMIN')" class="btn btn-primary">글 작성</a>
+    </div>
+
 	<div class="search-box">
-		<input type="text" placeholder="Search">
+		<input type="text" name="kw" id="search_kw" th:value="${kw}" placeholder="Search">
 		<button>검색</button>
 	</div>
-
+	
 	<table>
 		<thead>
 			<tr>
@@ -20,30 +25,87 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<!-- 글 번호 -->
+			<tr class="notice">
+                <td>📌</td>
+                <td>관리자만 작성 가능한 게시판</td>
+                <td>admin</td>
+                <td>0</td>
+                <td>2025-09-16</td>
+            </tr>
+            
+            <tr class="notice">
+                <td>📌</td>
+                <td>일반 유저는 읽기 가능</td>
+                <td>tiger</td>
+                <td>0</td>
+                <td>2025-09-16</td>
+            </tr>
+            <tr class="text-center" th:each="notice, loop : ${paging}">
+				<!-- 질문 글 번호 -->
 				<td th:text="${paging.getTotalElements - (loop.count-1) - (paging.number * paging.size)}"></td>
-				<!-- 글 제목 -->
+				<!-- 제목 왼쪽 정렬 -->
 				<td class="text-start">
-					<a th:href="@{|/notice/noticelist/${notice.id}|}" th:text="${notice.subject}">제목</a>
+					<a th:href="@{|/notice/noticeview/${notice.id}|}" th:text="${notice.subject}">제목</a>
 				</td>
-				<!-- 글쓴이 -->
 				<td>
-					<span th:if="${notice.author != null}" th:text="${notice.author.username}">작성자</span>
+					<span th:if="${notice.author != null}" th:text="${notice.author.username}"></span>
 				</td>
-				<!-- 조회수 -->
-				<td>
-					<span th:text="${notice.hit}">조회수</span>
-				</td>
-				<!-- 작성일 -->
-				<td>
-					<span th:text="${#temporals.format(notice.createdate, 'yyyy-MM-dd HH:mm')}">작성일</span>
-				</td>
+				<td><span th:text="${notice.hit}">조회수</span></td>
+				<td th:text="${#temporals.format(notice.createdate, 'yyyy-MM-dd HH:mm')}">등록일</td>
 			</tr>
 		</tbody>
 	</table>
-
-
+	
+	 <!-- 페이징 -->
+	<div th:if="${!paging.isEmpty()}">
+		<ul class="pagination justify-content-center">
+			<li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+				<a class="page-link" href="javascript:void(0)" th:data-page="${paging.number-1}">
+					<span>이전</span>
+				</a>
+			</li>
+			
+			<li th:each="page: ${#numbers.sequence(0,paging.totalPages-1)}" 
+			th:if="${page >= paging.number-5 and page <= paging.number+5}"
+			th:classappend="${page==paging.number} ? 'active'" class="page-item">
+				<a th:text="${page+1}" class="page-link" href="javascript:void(0)" th:data-page="${page}"></a>
+			</li>
+			
+			<li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+				<a class="page-link" href="javascript:void(0)" th:data-page="${paging.number+1}">
+					<span>다음</span>
+				</a>
+			</li>
+		</ul>
 	</div>
+	
+	<!-- hidden input 추가 -->
+	<form th:action="@{/notice/noticelist}" method="get" id="searchForm">
+	    <input type="hidden" id="page" name="page" th:value="${paging.number}">
+	    <input type="hidden" id="kw" name="kw" th:value="${kw}">
+	</form>
+	
+	</div>
+	
+	<script type="text/javascript" layout:fragment="script">
+	// 페이지 번호 전솔시 -> kw(검색어)도 같이 전송하기 위한 자바 스크립트
+	const page_elements = document.getElementsByClassName("page-link");
+		Array.from(page_elements).forEach(function (element) {
+			element.addEventListener('click', function () {
+				document.getElementById('page').value=this.dataset.page;
+				document.getElementById('searchForm').submit();
+		});
+	});
+		
+	// 검색어와 페이지 번호를 같이 전송하기 위한 자바 스크립트
+	const btn_search = document.getElementById("btn_search");
+		btn_search.addEventListener('click', function () {
+			document.getElementById('kw').value = document.getElementById('search_kw').value;
+			document.getElementById('page').value = 0
+			// 검색버튼 클릭 -> kw=검색란에 입력한 단어 & page = 0 -> 검색 결과 중 1페이지가 리스트로 조회
+			document.getElementById('searchForm').submit();
+		});
+	</script>
+	
 	
 </html>

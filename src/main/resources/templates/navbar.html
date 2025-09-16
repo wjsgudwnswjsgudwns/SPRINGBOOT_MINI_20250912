@@ -26,10 +26,15 @@
 					<li class="nav-item">
 						<a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/notice/noticelist}">공지사항</a>
 					</li>
+					<li class="nav-item">
+						<a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/hotel/reservation}">예약</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/hotel/myreservation}">내 예약</a>
+					</li>
 				</ul>
 			</div>
 		</div>
-	
 	</nav>
 </body>
 </html>

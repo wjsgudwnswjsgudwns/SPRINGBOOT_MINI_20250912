@@ -1,0 +1,110 @@
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+.reservation-container {
+    max-width: 800px;
+    margin: 50px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* 아코디언 버튼 스타일 */
+button.accordion {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 16px;
+    border-radius: 8px;
+    margin-top: 10px;
+    transition: background 0.2s;
+}
+
+button.accordion.active, button.accordion:hover {
+    background-color: #0056b3;
+}
+
+/* 아코디언 패널 스타일 (객실 목록) */
+.panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    margin-bottom: 10px;
+}
+
+.room-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+    padding: 10px 0;
+}
+
+/* 개별 객실 카드 스타일 */
+.room-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    background: #fefefe;
+    transition: all 0.2s;
+}
+
+.room-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.room-card.reserved {
+    background: #eee;
+    color: #999;
+    cursor: not-allowed;
+}
+
+.room-card input[type="checkbox"] {
+    margin-bottom: 10px;
+    transform: scale(1.2);
+}
+
+.room-name {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.room-state {
+    font-size: 0.85em;
+    color: #555;
+}
+
+/* 예약 확인 버튼 스타일 */
+button[type="submit"] {
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    background: #28a745;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button[type="submit"]:hover {
+    background: #218838;
+}
