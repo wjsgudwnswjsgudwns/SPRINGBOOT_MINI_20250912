@@ -16,8 +16,8 @@ java {
 }
 
 bootWar{
-	archiveBaseName='Hotel'
-	archiveFileName='Hotel.war'
+	archiveBaseName='hotel'
+	archiveFileName='hotel.war'
 	archiveVersion="0.0.0"
 }
 
