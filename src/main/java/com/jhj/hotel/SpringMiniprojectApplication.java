@@ -13,7 +13,7 @@ public class SpringMiniprojectApplication extends SpringBootServletInitializer{
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 		// TODO Auto-generated method stub
-		return super.configure(builder);
+		return builder.sources(SpringMiniprojectApplication.class);
 	}
 
 	public static void main(String[] args) {
