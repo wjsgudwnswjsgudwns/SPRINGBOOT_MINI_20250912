@@ -16,8 +16,8 @@ java {
 }
 
 bootWar{
-	archiveBaseName='jboard'
-	archiveFileName='jboard.war'
+	archiveBaseName='Hotel'
+	archiveFileName='Hotel.war'
 	archiveVersion="0.0.0"
 }
 
