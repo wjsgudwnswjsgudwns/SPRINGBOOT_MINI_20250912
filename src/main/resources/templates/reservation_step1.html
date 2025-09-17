@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{index}">
@@ -21,5 +20,20 @@
             <button type="submit">객실 선택하기</button>
         </form>
     </div>
+    
+     <script>
+        const sdate = document.getElementById('sdate');
+        const edate = document.getElementById('edate');
+
+        // 오늘 날짜를 yyyy-MM-dd 형식으로 가져오기
+        const today = new Date().toISOString().split('T')[0];
+        sdate.setAttribute('min', today);
+
+        // 체크인 날짜가 바뀌면 체크아웃 최소 날짜 설정
+        sdate.addEventListener('change', function() {
+            edate.value = ''; // 기존 체크아웃 날짜 초기화
+            edate.setAttribute('min', this.value);
+        });
+    </script>
 </div>
 </html>

@@ -12,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
@@ -49,6 +50,7 @@ public class Reservation {
 	private LocalDateTime rdate; // 예약 날짜
 	
 	@ManyToOne
+	@JoinColumn(name = "author_id")
 	private HotelUser author; // 예약한 사람
 
 	@OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
@@ -61,6 +63,6 @@ public class Reservation {
             rooms.add(room);
         }
         room.setReservation(this);
-    }
+    } 
 	
 }

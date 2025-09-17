@@ -1,10 +1,58 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
+<html layout:decorate="~{index}">
 
-</body>
+	<div layout:fragment="content" class="container my-3">
+	
+		<link rel="stylesheet" type="text/css" th:href="@{/css/myreservation.css}">
+		
+		<div class="reservation-list-container">
+		    <h2>내 예약 내역</h2>
+		
+		    <div th:if="${#lists.isEmpty(reservations)}" class="empty-message">
+		        예약 내역이 없습니다.
+		    </div>
+		
+		    <div th:each="reservation : ${reservations}" class="reservation-card">
+		        <div class="reservation-header">
+		            <span th:text="'예약번호: ' + ${reservation.id}"></span>
+		        </div>
+		
+		        <div class="reservation-body">
+		            <p><strong>체크인:</strong> <span th:text="${reservation.sdate}"></span></p>
+		            <p><strong>체크아웃:</strong> <span th:text="${reservation.edate}"></span></p>
+		            <p><strong>인원 수:</strong> <span th:text="${reservation.people}"></span> 명</p>
+		
+		            <div class="room-list">
+		                <p><strong>예약 객실:</strong></p>
+		                <ul>
+		                    <li th:each="room : ${reservation.rooms}" 
+		                        th:text="${room.roomname} + ' (' + ${room.state} + ')'"></li>
+		                </ul>
+		            </div>
+		        </div>
+		        
+		        <!-- 삭제버튼 -->
+				<a href="javascript:void(0);" 
+				th:data-uri="@{|/hotel/delete/${reservation.id}|}" class="delete btn btn-sm btn-outline-secondary" 
+				sec:authorize="isAuthenticated()" 
+				th:text="삭제">예약 취소</a>
+		    </div>
+		</div>
+	
+	<!-- 자바 스크립트 -->
+	<script type="text/javascript" layout:fragment="script">
+		const delete_elements = document.getElementsByClassName("delete");
+			Array.from(delete_elements).forEach(function (element) {
+				element.addEventListener('click', function () {
+					if (confirm("정말로 삭제하시겠습니까?")) {
+					location.href = this.dataset.uri;
+				};
+			});
+		});
+	</script>
+	
+	</div>
+	
 </html>
+	
+	
+	

@@ -68,19 +68,19 @@ public class BoardlistService {
 		boardlistRepository.delete(freeboard);
 	}
 	
-	public Page<Freeboard> getPageFreeboard(int page, String kw){
+	public Page<Freeboard> getPageFreeboard(int page, String kw, String type){
 		int pageSize =  10; // 페이지 당 10개씩 글 출력
 		
 		List<Sort.Order> sorts = new ArrayList<>();
 		sorts.add(Sort.Order.desc("id"));
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(sorts));
-		Specification<Freeboard> spec = search(kw);
+		Specification<Freeboard> spec = search(kw, type);
 		
 		return boardlistRepository.findAll(spec, pageable);
 		
 	}
 
-	private Specification<Freeboard> search(String kw) { // 키워드 (kw) 로 조회
+	private Specification<Freeboard> search(String kw, String type) { // 키워드 (kw) 로 조회
 		return new Specification<>() {
 			
 			private static final long serialVersionUID = 1L; // 변조 방지
@@ -96,4 +96,53 @@ public class BoardlistService {
 			}
 		};
 	}
+	
+	public void like(Freeboard freeboard, HotelUser hotelUser) {
+		freeboard.getLike().add(hotelUser);
+		boardlistRepository.save(freeboard);
+	}
+	
+	public void dislike(Freeboard freeboard, HotelUser hotelUser) {
+		freeboard.getDislike().add(hotelUser);
+		boardlistRepository.save(freeboard);
+	}
+	
+	// 인기 게시판
+	public Page<Freeboard> getPageLikeboard(int page, String kw, String type){
+		int pageSize =  10; // 페이지 당 10개씩 글 출력
+		
+		List<Sort.Order> sorts = new ArrayList<>();
+		sorts.add(Sort.Order.desc("id"));
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(sorts));
+		Specification<Freeboard> spec = search2(kw, type);
+		
+		return boardlistRepository.findAll(spec, pageable);
+		
+	}
+
+	private Specification<Freeboard> search2(String kw, String type) {
+        return (Root<Freeboard> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
+            query.distinct(true);
+            Join<Freeboard, HotelUser> author = root.join("author", JoinType.LEFT);
+
+            List<Predicate> predicates = new ArrayList<>();
+
+            // 검색어 필터
+            if (kw != null && !kw.isEmpty()) {
+                predicates.add(cb.or(
+                    cb.like(root.get("subject"), "%" + kw + "%"),
+                    cb.like(root.get("content"), "%" + kw + "%"),
+                    cb.like(author.get("username"), "%" + kw + "%")
+                ));
+            }
+
+            // 인기 글 필터
+            predicates.add(cb.greaterThanOrEqualTo(cb.size(root.get("like")), 3));
+
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+	
+	
 }

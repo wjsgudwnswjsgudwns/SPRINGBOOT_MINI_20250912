@@ -12,4 +12,5 @@ public interface BoardlistRepository extends JpaRepository<Freeboard,Integer>{
 	public Page<Freeboard> findAll(Pageable pageable);
 	
 	public Page<Freeboard> findAll(Specification<Freeboard> spec,Pageable pageable);
+	
 }

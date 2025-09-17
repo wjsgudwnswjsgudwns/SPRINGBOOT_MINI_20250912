@@ -13,3 +13,38 @@ input[type=submit] {
 ul {
 	list-style: none;
 }
+
+/* style.css */
+
+.wide-background-image-container {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* 화면 전체 높이를 채웁니다. */
+    overflow: hidden;
+}
+
+.wide-background-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 이미지가 잘리지 않고 전체를 채우도록 설정 */
+    filter: brightness(0.7); /* 이미지를 약간 어둡게 하여 글씨가 잘 보이게 합니다. */
+}
+
+.overlay-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* 가운데 정렬 */
+    color: white;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.overlay-text h1 {
+    font-size: 4em;
+    margin-bottom: 0.2em;
+}
+
+.overlay-text p {
+    font-size: 1.5em;
+}

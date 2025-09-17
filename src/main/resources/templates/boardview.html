@@ -12,9 +12,22 @@
 		    </div>
 		    <hr>
 		    <div class="mb-3" th:text="${freeboard.content}">게시글 내용</div>
-		    <a th:href="@{/freeboard/boardlist}" class="btn btn-secondary">목록</a>
 		    
-		
+		    <!-- 추천 -->
+			<a href="javascript:void(0);" 
+			th:data-uri="@{|/freeboard/like/${freeboard.id}|}" class="recommend btn btn-sm btn-outline-secondary" 
+			sec:authorize="isAuthenticated()">추천
+			<span class="badge rounded-pill bg-success" th:text="${#lists.size(freeboard.like)}"></span>
+			</a>
+			<!-- 비추천 -->
+			<a href="javascript:void(0);" 
+			th:data-uri="@{|/freeboard/dislike/${freeboard.id}|}" class="notrecommend btn btn-sm btn-outline-secondary" 
+			sec:authorize="isAuthenticated()">비추천
+			<span class="badge rounded-pill bg-success" th:text="${#lists.size(freeboard.dislike)}"></span>
+			</a>
+
+		    <a th:href="@{/freeboard/boardlist}" class="btn btn-secondary">목록</a>
+
 			<!-- 수정 버튼 -->
 			<a th:href="@{|/freeboard/modify/${freeboard.id}|}" class="btn btn-sm btn-outline-secondary" 
 			sec:authorize="isAuthenticated()" 
@@ -89,7 +102,23 @@
 		});
 	});
 		
+	const recommend_elements = document.getElementsByClassName("recommend");
+		Array.from(recommend_elements).forEach(function (element) {
+			element.addEventListener('click', function () {
+				if (confirm("추천 하시겠습니까?")) {
+				location.href = this.dataset.uri;
+			};
+		});
+	});
 		
+	const notrecommend_elements = document.getElementsByClassName("notrecommend");
+	Array.from(notrecommend_elements).forEach(function (element) {
+		element.addEventListener('click', function () {
+			if (confirm("비추천 하시겠습니까?")) {
+			location.href = this.dataset.uri;
+			};
+		});
+	});
 		
 	</script>
 </html>

@@ -1,5 +1,6 @@
 package com.jhj.hotel.controller;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +20,7 @@ import com.jhj.hotel.entity.Reservation;
 import com.jhj.hotel.entity.Room;
 import com.jhj.hotel.service.ReservationService;
 import com.jhj.hotel.service.RoomService;
+import com.jhj.hotel.service.UserService;
 
 @Controller
 @RequestMapping(value = "/hotel")
@@ -28,6 +31,9 @@ public class ReservationController {
 	
 	@Autowired
 	private RoomService roomService;
+	
+	@Autowired
+	private UserService userService;
 	
 	@GetMapping(value = "/reservation")
 	public String reservation () {
@@ -55,7 +61,9 @@ public class ReservationController {
                           @RequestParam("sdate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate sdate,
                           @RequestParam("edate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate edate,
                           @RequestParam("people") Integer people,
-                          @AuthenticationPrincipal HotelUser user, Model model) {
+                          Model model, Principal principal) {
+    	
+    	HotelUser user = userService.getUser(principal.getName());
 
         Reservation reservation = reservationService.createReservation(sdate, edate, people, user, roomIds);
         
@@ -65,30 +73,42 @@ public class ReservationController {
         return "reservation_confirm";
     }
     
-    @GetMapping(value = "/complete")
-    public String complete() {
-    	
-    	
-    	return "myreservation";
-    }
-    
     @PostMapping(value = "/complete")
-    public String complete(@RequestParam("roomNames") List<String> roomNames,
+    public String complete(@RequestParam("roomIds") List<Long> roomIds,
                                      @RequestParam("sdate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate sdate,
                                      @RequestParam("edate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate edate,
                                      @RequestParam("people") Integer people,
                                      Model model) {
 
-        List<Room> selectedRooms = roomService.getRoomsByNames(roomNames);
+        List<Room> selectedRooms = roomService.getRoomsByIds(roomIds);
 
         model.addAttribute("sdate", sdate);
         model.addAttribute("edate", edate);
         model.addAttribute("people", people);
         model.addAttribute("selectedRooms", selectedRooms);
 
-        return "/";
+        return "redirect:/hotel/myreservation";
     }
 	
+    @GetMapping(value = "/myreservation")
+    public String complete(Principal principal, Model model) {
+    	HotelUser user = userService.getUser(principal.getName());
+    	
+    	List<Reservation> reservations = reservationService.myReservations(user);
+    	model.addAttribute("reservations", reservations);
+    	
+    	return "myreservation";
+    }
+    
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Integer id) {
+    	Reservation reservation = reservationService.getReservation(id);
+    	
+    	reservationService.delete(reservation);
+    	
+    	return "redirect:/hotel/myreservation";
+    }
+    
 	
 	
 }

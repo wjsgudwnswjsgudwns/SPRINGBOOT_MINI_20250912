@@ -2,6 +2,7 @@ package com.jhj.hotel.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -11,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
@@ -54,4 +56,10 @@ public class Freeboard {
 	
 	@OneToMany(mappedBy = "freeboard", cascade = CascadeType.REMOVE)
 	private List<Comment> commentlist;
+	
+	@ManyToMany
+	Set<HotelUser> like;
+	
+	@ManyToMany
+	Set<HotelUser> dislike;
 }

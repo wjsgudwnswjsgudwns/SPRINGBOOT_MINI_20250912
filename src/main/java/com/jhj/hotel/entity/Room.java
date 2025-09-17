@@ -36,4 +36,5 @@ public class Room {
 	
 	@ManyToOne
 	private Reservation reservation; // 방에 잡힌 예약 정보
+
 }

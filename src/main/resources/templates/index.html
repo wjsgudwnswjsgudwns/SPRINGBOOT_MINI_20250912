@@ -13,7 +13,17 @@
 	<nav th:replace="~{navbar :: navbarFragment}"></nav>
 	
 	<!-- 기본 템플릿 안에 삽입될 내용 Start -->
-	<th:block layout:fragment="content"></th:block>
+	<th:block layout:fragment="content">
+		<div class="wide-background-image-container">
+        <img th:src="@{/images/hotel.png}" alt="밝고 모던한 호텔 로비" class="wide-background-image">
+        
+        <div class="overlay-text">
+            <h1>Hotel</h1>
+            <p>일상 속 완벽한 휴식</p>
+        </div>
+    </div>
+		
+	</th:block>
 	<!-- 기본 템플릿 안에 삽입될 내용 End -->
 	
 	<!-- 자바스크립트 Start -->

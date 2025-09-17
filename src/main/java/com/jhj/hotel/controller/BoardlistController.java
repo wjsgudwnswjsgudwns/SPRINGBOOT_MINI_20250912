@@ -38,11 +38,22 @@ public class BoardlistController {
 	
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping(value = "/boardlist")
-	public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "kw", defaultValue = "") String kw) {
-		Page<Freeboard> paging = boardlistService.getPageFreeboard(page,kw);
+	public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "kw", defaultValue = "") String kw, @RequestParam(value = "type", defaultValue = "all") String type) {
+		Page<Freeboard> paging = boardlistService.getPageFreeboard(page,kw, type);
+		model.addAttribute("paging",paging);
+		model.addAttribute("kw", kw);	
+		model.addAttribute("type", type);
+		return "boardlist";
+	}
+	
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping(value = "/likelist")
+	public String likelist(Model model, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "kw", defaultValue = "") String kw, @RequestParam(value = "type", defaultValue = "all") String type) {
+		Page<Freeboard> paging = boardlistService.getPageLikeboard(page,kw, type);
 		model.addAttribute("paging",paging);
 		model.addAttribute("kw", kw);
-		return "boardlist";
+		model.addAttribute("type", type);
+		return "likelist";
 	}
 	
 	@PreAuthorize("isAuthenticated()")
@@ -122,5 +133,28 @@ public class BoardlistController {
 		return "redirect:/freeboard/boardlist";
 	}
 	
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping(value = "/like/{id}")
+	public String like(@PathVariable("id") Integer id, Principal principal) {
+		Freeboard freeboard = boardlistService.getBoard(id);
+		HotelUser user = userService.getUser(principal.getName());
+		//로그인한 유저의 아이디로 유저 엔티티 조회하기
+		
+		
+		boardlistService.like(freeboard, user);
+		return String.format("redirect:/freeboard/boardview/%s", id);
+	}
+	
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping(value = "/dislike/{id}")
+	public String dislike(@PathVariable("id") Integer id, Principal principal) {
+		Freeboard freeboard = boardlistService.getBoard(id);
+		HotelUser user = userService.getUser(principal.getName());
+		//로그인한 유저의 아이디로 유저 엔티티 조회하기
+		
+		
+		boardlistService.dislike(freeboard, user);
+		return String.format("redirect:/freeboard/boardview/%s", id);
+	}
 	
 }
